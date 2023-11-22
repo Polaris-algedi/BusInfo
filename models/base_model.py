@@ -1,18 +1,19 @@
 #!/usr/bin/python3
-"""This module defines a base class for all models in our hbnb clone"""
+"""This module defines a base class for all models in our BusInfo website"""
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import String
+from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 class BaseModel:
-    """A base class for all hbnb models"""
-    id = Column(String(60), primary_key=True, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    """A base class for all BusInfo models"""
+    id: Mapped[str] = mapped_column(String(60), primary_key=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow())
+    updated_at: Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
