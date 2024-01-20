@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Database storage engine using SQLAlchemy with a mysql+mysqldb database
+"""Database storage engine using SQLAlchemy with mysql+mysqldb database
 connection.
 """
 
@@ -8,17 +8,23 @@ from models.base_model import Base
 from models.user import User
 from models.route import Route
 from models.feedback import Feedback
+from models.bus import Bus
+from models.schedule import Schedule
+from models.stop import BusStop
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-name2class = {
+DB_CLASSES = {
     'User': User,
     'Route': Route,
-    'Feedback': Feedback
+    'Feedback': Feedback,
+    'Bus': Bus,
+    'Schedule': Schedule,
+    'BusStop': BusStop
 }
 
 
 class DBStorage:
-    """Database Storage"""
+    """Database Storage using SQLAlchemy with MySQL database connection."""
     __engine = None
     __session = None
 
@@ -39,12 +45,12 @@ class DBStorage:
             self.reload()
         objects = {}
         if type(cls) == str:
-            cls = name2class.get(cls, None)
+            cls = DB_CLASSES.get(cls, None)
         if cls:
             for obj in self.__session.query(cls):
                 objects[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for cls in name2class.values():
+            for cls in DB_CLASSES.values():
                 for obj in self.__session.query(cls):
                     objects[obj.__class__.__name__ + '.' + obj.id] = obj
         return objects
@@ -77,9 +83,10 @@ class DBStorage:
 
     def get(self, cls, id):
         """Retrieve an object"""
-        if cls is not None and type(cls) is str and id is not None and\
-           type(id) is str and cls in name2class:
-            cls = name2class[cls]
+        if cls is not None and type(id) == str:
+            if isinstance(cls, str):
+                cls = DB_CLASSES.get(cls, None)
+            
             result = self.__session.query(cls).filter(cls.id == id).first()
             return result
         else:
@@ -88,10 +95,11 @@ class DBStorage:
     def count(self, cls=None):
         """Count number of objects in storage"""
         total = 0
-        if type(cls) == str and cls in name2class:
-            cls = name2class[cls]
+        if cls is not None:
+            if isinstance(cls, str):
+                cls = DB_CLASSES.get(cls, None)
             total = self.__session.query(cls).count()
-        elif cls is None:
-            for cls in name2class.values():
+        else:
+            for cls in DB_CLASSES.values():
                 total += self.__session.query(cls).count()
         return total
