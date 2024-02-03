@@ -13,8 +13,9 @@ class BusStop(BaseModel, Base):
 
     route_id: Mapped[str] = mapped_column(ForeignKey('routes.id'), nullable=False)
     route: Mapped['Route'] = relationship(back_populates='stops')
-    
+
+    stop_number_in_route: Mapped[int] = mapped_column(nullable=False)
     stop_name: Mapped[str] = mapped_column(String(60), nullable=False)
-    place: Mapped[str] = mapped_column(String(128), nullable=False)
+    place: Mapped[str] = mapped_column(String(128), nullable=True)
     is_terminus: Mapped[bool] = mapped_column(nullable=True, default=False)
     
