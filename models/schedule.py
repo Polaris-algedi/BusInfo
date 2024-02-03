@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """This module defines a Schedule class."""
+from datetime import time, timedelta
 from models.base_model import BaseModel, Base
 from models.route import Route
-from datetime import time, timedelta
 from sqlalchemy import String
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
