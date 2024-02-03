@@ -13,7 +13,7 @@ def api_status():
     This function is linked to the '/status' route.
     It returns a JSON object with the status of the API.
     """
-    return jsonify({'status': 'OK'})
+    return jsonify({'status': 'OK', 'message': 'API is alive!'})
 
 
 @app_views.route('/stats', strict_slashes=False)

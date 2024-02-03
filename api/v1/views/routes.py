@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" schedule module """
+""" routes module """
 
 from flask import jsonify, abort
 from api.v1.views import app_views
@@ -10,7 +10,7 @@ from models.route import Route
 
 
 @app_views.route('/routes', methods=['GET'], strict_slashes=False)
-@app_views.route('/route/<route_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/routes/<route_id>', methods=['GET'], strict_slashes=False)
 def get_route(route_id=None):
     """ Retrieves a Route object or the list of all Route objects """
     if route_id:
