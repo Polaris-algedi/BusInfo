@@ -6,7 +6,7 @@ It defines the Flask application instance and routes.
 
 from flask import Flask, jsonify, make_response
 from api.v1.views import app_views  # Importing Blueprint
-# from flask_cors import CORS
+from flask_cors import CORS
 from models import storage
 import os
 
@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 
 # Create a CORS instance allowing: /* for 0.0.0.0
-# cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
+cors = CORS(app)
 
 
 @app.teardown_appcontext
