@@ -10,7 +10,7 @@ from typing import List
 
 
 class Route(BaseModel, Base):
-    """This class defines a route by various attributes"""
+    """Class to represent a route."""
     __tablename__ = 'routes'
 
     schedule_id: Mapped[str] = mapped_column(ForeignKey('schedules.id'), nullable=False)
@@ -19,6 +19,7 @@ class Route(BaseModel, Base):
     
     line_number: Mapped[int] = mapped_column(nullable=False)
     urban: Mapped[bool] = mapped_column(nullable=False)
+    price: Mapped[int] = mapped_column(nullable=False)
 
     departure_terminus: Mapped[str] = mapped_column(String(128), nullable=False)
     arrival_terminus: Mapped[str] = mapped_column(String(128), nullable=False)
