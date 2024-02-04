@@ -17,7 +17,7 @@ def jsonify_schedule(schedule):
     return instance_as_dict
 
 @app_views.route('/schedules', methods=['GET'], strict_slashes=False)
-@app_views.route('/schedule/<schedule_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/schedules/<schedule_id>', methods=['GET'], strict_slashes=False)
 def get_schedule(schedule_id=None):
     """ Retrieves a Schedule object or the list of all Schedule objects """
     if schedule_id:
@@ -34,7 +34,7 @@ def get_schedule(schedule_id=None):
 
         return jsonify(list_schedules)
 
-@app_views.route('/schedule/<schedule_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/schedules/<schedule_id>', methods=['DELETE'], strict_slashes=False)
 def delete_schedule(schedule_id):
     """ Deletes a Schedule object """
     schedule = storage.get(Schedule, schedule_id)
