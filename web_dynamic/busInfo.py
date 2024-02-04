@@ -44,7 +44,7 @@ def get_fares_by_bus_lines():
 
 @app.route('/home', strict_slashes=False)
 def home():
-    return render_template('busETA.html')
+    return render_template('busEAT.html')
 
 
 if __name__ == "__main__":
