@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """
-This is the main module of our Flask web application.
-It defines the Flask application instance and routes.
+This module defines the Flask application instance. 
 """
 
 from flask import Flask, jsonify, make_response
@@ -16,7 +15,7 @@ app = Flask(__name__)
 # Register the Blueprint to the Flask application
 app.register_blueprint(app_views)
 
-# Create a CORS instance allowing: /* for 0.0.0.0
+# Enable CORS
 cors = CORS(app)
 
 
