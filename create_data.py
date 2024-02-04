@@ -5,7 +5,7 @@ from models.schedule import Schedule
 from models.route import Route
 from models.stop import BusStop
 from models import storage
-from datetime import time, timedelta
+from datetime import time
 
 
 # Create Schedule instances and save them to the database
@@ -15,23 +15,23 @@ schedule1 = Schedule()
 schedule2 = Schedule(
     first_departure=time(7, 0, 0),
     last_departure=time(22, 0, 0),
-    duration=timedelta(hours=1),
-    bus_frequency=timedelta(minutes=15)
+    duration=time(hour=1),
+    bus_frequency=time(minute=15)
 )
 
 
 schedule3 = Schedule(
     first_departure=time(6, 0, 0),
     last_departure=time(21, 0, 0),
-    duration=timedelta(hours=1),
-    bus_frequency=timedelta(minutes=20)
+    duration=time(hour=1),
+    bus_frequency=time(minute=20)
 )
 
 schedule4 = Schedule(
     first_departure=time(5, 0, 0),
     last_departure=time(20, 0, 0),
-    duration=timedelta(hours=2),
-    bus_frequency=timedelta(minutes=30)
+    duration=time(hour=2),
+    bus_frequency=time(minute=30)
 )
 
 
