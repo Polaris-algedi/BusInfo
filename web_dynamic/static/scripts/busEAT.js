@@ -33,6 +33,18 @@ $(document).ready(function() {
         console.log('Estimated time between stops:', estimated_time_between_stops);
         let estimated_arrival_time_list = bus_EAT(schedule.first_departure, schedule.last_departure, schedule.bus_frequency, estimated_time_between_stops, stopNumber);
         console.log('Estimated arrival time list:', estimated_arrival_time_list);
+
+        
+        
+        const tableBody = $('table tbody');
+        tableBody.empty();
+        appendTableBody(tableBody, route, schedule);
+        
+        
+        const list_group = $('div#estimatedArrivalTimes');
+        list_group.empty();
+        list_header = `Estimated arrival times for ${stopName}`;
+        appendList(list_group, list_header, estimated_arrival_time_list.map(estimated_arrival_time => estimated_arrival_time.toLocaleTimeString()));
       })
       
       .catch(function(error) {
@@ -139,6 +151,14 @@ function appendDropdownItems(dropdownMenu, itemList) {
   });
 }
 
+function appendList(list_group, listHeader, itemList) {
+  list_group.append(`<a href="#" class="list-group-item list-group-item-action active">${listHeader}</a>`);
+
+  itemList.forEach(element => {
+    list_group.append(`<a href="#" class="list-group-item list-group-item-action">${element}</a>`);
+  });
+  
+}
 /**
  * Retrieves a route object from an array of routes based on the line number.
  * @param {Array} routes - An array of route objects.
@@ -248,7 +268,22 @@ function calculate_ETBS(duration, stops) {
   
   
   
-  
+  function appendTableBody(tableBody, route, schedule) {
+    
+    // Create row for table body
+    let row = $('<tr></tr>');
+    // Set the innerHTML of the row
+    row.html(`
+      <td scope="row">${route.departure_terminus}</td>
+      <td>${schedule.duration}</td>
+      <td>${route.arrival_terminus}</td>
+      <td>${schedule.bus_frequency}</td>
+    `);
+
+    // Append the row to the appropriate tbody
+    tableBody.append(row);
+
+  }
   
   
   
