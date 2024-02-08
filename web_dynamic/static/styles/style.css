@@ -1,12 +1,5 @@
-.wrap-headline {
-  margin-top: 25%;
-  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
-  color: #f1f1f1; /* Grey text */
-  padding: 20px; /* Some padding */
-
-}
 footer a {
-  color: gray;
+  color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   background-color: transparent;
 }
@@ -14,4 +7,17 @@ footer a {
 footer a:hover {
   color: white;
   text-decoration: none;
+}
+
+/* Scroll to top button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+}
+
+.scroll-to-top a {
+  text-decoration: none;
+  color: #fff;
 }
