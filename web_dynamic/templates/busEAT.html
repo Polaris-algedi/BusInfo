@@ -7,32 +7,31 @@
     <!-- Bootstrap CSS file -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../static/styles/style.css">
 
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <a href="#" class="navbar-brand">
-                <img src="images/logo.svg" height="28" alt="CoolBrand">
-            </a>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">BusInfo</a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
         
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
-                    <a href="#" class="nav-item nav-link active">Home</a>
-                    <a href="#" class="nav-item nav-link">Profile</a>
-                    <a href="#" class="nav-item nav-link">Messages</a>
-                    <a href="#" class="nav-item nav-link disabled" tabindex="-1">Reports</a>
+                    <a href="/home" class="nav-item nav-link active">Home</a>
+                    <a href="/fares-by-bus-lines" class="nav-item nav-link">fares by bus lines</a>
+                    <a href="#" class="nav-item nav-link">Feedback</a>
+                    
+                </div>
+                <div class="navbar-nav ml-auto">
+                    <a href="#" class="nav-item nav-link"><span class="fa-solid fa-user-plus"></span> Sign up</a>
+                    <a href="#" class="nav-item nav-link"><span class="fa-solid fa-right-to-bracket"></span> Sign in</a>
                 </div>
             </div>
         </nav>
-
     </header><!--header-->
-
-
 
 
     <section>
@@ -44,7 +43,7 @@
                         <button class="btn btn-primary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Bus Lines
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdownMenu_lines">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdownMenu_lines" style="max-height: 400px; overflow-y: auto;">
                           
                         </div>
                     </div>
@@ -55,7 +54,7 @@
                         <button class="btn btn-primary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Stops
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdownMenu_stops">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdownMenu_stops" style="max-height: 400px; overflow-y: auto;">
                           <h6 class="dropdown-header">Select a bus line first</h6>
                           
                         </div>
@@ -66,6 +65,8 @@
                     <button type="button" class="btn btn-primary btn-lg btn-block" id="search">Search</button>
                 </div>
             </div>
+
+            
 
 
             <!-- row 2 -->
@@ -80,52 +81,68 @@
                                 <th scope="col">Frequency</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="info_1">
                             <tr>
-                                <td scope="row">1</td>
-                                <td>Train Station</td>
-                                <td>Stop 1</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <td scope="row">2</td>
-                                <td>Train Station</td>
-                                <td>Stop 2</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <td scope="row">3</td>
-                                <td>Train Station</td>
-                                <td>Stop 3</td>
-                                <td>@twitter</td>
+                                <td scope="row">Station name</td>
+                                <td>00:00:00</td>
+                                <td>Station name</td>
+                                <td>00:00:00</td>
                             </tr>
                         </tbody>
                     </table>
                 </div><!--col-->
             </div><!--row 2-->
 
-
             <!-- row 3 -->
+            <div class="row my-4">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">                        
+                    <table class="table text-center">
+                        <thead>
+                            <tr class="table-active">
+                                <th scope="col">Bus Line</th>
+                                <th scope="col">First departure time</th>
+                                <th scope="col">Last departure time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="info_2">
+                            <tr>
+                                <td scope="row">Line X</td>
+                                <td>00:00:00</td>
+                                <td>00:00:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!--col-->
+            </div><!--row 3-->
+
+
+
+            <!-- row 4 -->
             <div class="row my-4">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     
                     <div class="list-group text-center" id="estimatedArrivalTimes">
-                        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Line X pass by stop Y at Time</a>
-                        <a href="#" class="list-group-item list-group-item-action">Bus ID Number departs from Terminus X to Terminus Y at Time</a>
-                        <a href="#" class="list-group-item list-group-item-action">Bus ID Number departs from Terminus X to Terminus Y at Time</a>
-                        <a href="#" class="list-group-item list-group-item-action">Bus ID Number departs from Terminus X to Terminus Y at Time</a>
-                        <a href="#" class="list-group-item list-group-item-action">Bus ID Number departs from Terminus X to Terminus Y at Time</a>
+                        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Estimated arrival times for stop name</a>
+                        <a href="#" class="list-group-item list-group-item-action">00:00:00 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action">00:00:00 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action">00:00:00 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action">00:00:00 AM</a>
                     </div>
                     
                 </div>
                 
-            </div><!--row 3-->
+            </div><!--row 4-->
 
             
         </div>
     </section><!--Main-->
     
-
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top">
+        <a href="#top" class="btn btn-primary">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
 
 
 
@@ -160,15 +177,15 @@
                     <div class="">
             
                         <!-- Facebook -->
-                        <a class="fb-ic">
+                        <a class="fb-ic" href="#" target="_blank">
                             <i class="fa-brands fa-facebook fa-lg fa-2x px-3"> </i>
                         </a>
                         <!-- Twitter -->
-                        <a class="tw-ic">
+                        <a class="tw-ic" href="#" target="_blank">
                             <i class="fa-brands fa-x-twitter fa-lg fa-2x px-3"> </i>
                         </a>
                         <!--Instagram-->
-                        <a class="ins-ic">
+                        <a class="ins-ic" href="#" target="_blank">
                             <i class="fa-brands fa-instagram fa-lg fa-2x px-3"> </i>
                         </a>
                     </div>
