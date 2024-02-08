@@ -5,7 +5,101 @@
  * Retrieves schedule and calculates estimated arrival time.
  */
 $(document).ready(function() {
-  populateDropdownMenu();
+  // Retrieve the routes from the API
+  $.get('http://127.0.0.1:5001/api/v1/routes')
+    .then(function(routes) {
+      // Categorize the routes into urban and suburban lines
+      const { urbanList, suburbanList } = categorizeRoutes(routes);
+
+
+      // Pad the route numbers with leading zeros
+      urbanList.forEach((element, index) => {
+        urbanList[index] = element.toString().padStart(2, '0');
+      });
+
+      suburbanList.forEach((element, index) => {
+        suburbanList[index] = element.toString().padStart(2, '0');
+      });
+      
+      // Append the routes to the dropdown menu
+      const dropdownMenu = $('div#dropdownMenu_lines');
+      appendDropdownHeader(dropdownMenu, 'Urban', urbanList.length);
+      appendDropdownItems(dropdownMenu, urbanList);
+      appendDropdownHeader(dropdownMenu, 'Suburban', suburbanList.length, true);
+      appendDropdownItems(dropdownMenu, suburbanList);
+      
+      // Store the routes in the button
+      $('button#search').data('routes', routes);
+      
+      
+    })
+    .catch(function(error) {
+      console.log('Error fetching routes:', error);
+    });
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Listen for the click event on the dropdown items
+  $(document).on('click', "#dropdownMenu_lines .dropdown-item", function(event) {
+    const clickedItemText = $(this).text();
+
+    console.log('The clicked item is: ', clickedItemText);
+    const routes = $('button#search').data('routes');
+    const route = getRoute(routes, clickedItemText);
+
+    // Store the selected route in the button
+    $('#search').data('route', route);
+
+
+    $.get(`http://127.0.0.1:5001/api/v1/routes/${route.id}/stops`)
+      .then(function(stops) {
+        const stopsList = getStopsList(stops);
+
+        const dropdownMenu = $('div#dropdownMenu_stops');
+        dropdownMenu.empty();
+        appendDropdownHeader(dropdownMenu, 'Stops', stopsList.length);
+        appendDropdownItems(dropdownMenu, stopsList);
+      
+        // Store the stops in the button
+        $('#search').data('stops', stops);
+      })
+
+      .catch(function(error) {
+        console.log('Error fetching stops:', error);
+      });
+    
+  });
 
   // Listen for the click event on the dropdown items 
   $(document).on('click', '#dropdownMenu_stops .dropdown-item', function(event) {
@@ -36,9 +130,13 @@ $(document).ready(function() {
 
         
         
-        const tableBody = $('table tbody');
-        tableBody.empty();
-        appendTableBody(tableBody, route, schedule);
+        const tableBody_1 = $('tbody#info_1');
+        tableBody_1.empty();
+        appendTableBody_1(tableBody_1, route, schedule);
+
+        const tableBody_2 = $('tbody#info_2');
+        tableBody_2.empty();
+        appendTableBody_2(tableBody_2, route, schedule);
         
         
         const list_group = $('div#estimatedArrivalTimes');
@@ -53,53 +151,91 @@ $(document).ready(function() {
 
 
   });
+
+
+
+  // Show or hide the scroll-to-top button based on scroll position
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 100) {
+        $('.scroll-to-top').fadeIn();
+    } else {
+        $('.scroll-to-top').fadeOut();
+    }
+  });
+
+  // Scroll to top when the button is clicked
+  $('.scroll-to-top a').click(function () {
+      $('html, body').animate({ scrollTop: 0 }, 800);
+      return false;
+  });
 });
 
-function populateDropdownMenu() {
-  $.get('http://127.0.0.1:5001/api/v1/routes')
-    .then(function(routes) {
-      const { urbanList, suburbanList } = categorizeRoutes(routes);
+/*function populateDropdownMenu() {
+  
+    const routes = $('button#search').data('routes');
+  const route = getRoute(routes, 1);
 
-      const dropdownMenu = $('div#dropdownMenu_lines');
-      appendDropdownHeader(dropdownMenu, 'Urban', urbanList.length);
-      appendDropdownItems(dropdownMenu, urbanList);
-      appendDropdownHeader(dropdownMenu, 'Suburban', suburbanList.length);
-      appendDropdownItems(dropdownMenu, suburbanList);
-
-      
-      $("#dropdownMenu_lines .dropdown-item").click(function(event) {
-        const clickedItemText = $(this).text();
-
-        console.log('The clicked item is: ', clickedItemText);
-        const route = getRoute(routes, clickedItemText);
-
-        // Store the selected route in the button
-        $('#search').data('route', route);
+  // Store the selected route in the button
+  $('#search').data('route', route);
 
 
-        $.get(`http://127.0.0.1:5001/api/v1/routes/${route.id}/stops`)
-          .then(function(stops) {
-            const stopsList = getStopsList(stops);
+  $.get(`http://127.0.0.1:5001/api/v1/routes/${route.id}/stops`)
+    .then(function(stops) {
+      const stopsList = getStopsList(stops);
 
-            const dropdownMenu = $('div#dropdownMenu_stops');
-            appendDropdownHeader(dropdownMenu, 'Stops', stopsList.length);
-            appendDropdownItems(dropdownMenu, stopsList);
-         
-            // Store the stops in the button
-            $('#search').data('stops', stops);
-          })
+      $('#search').data('stopName', stopsList[0]);
 
-          .catch(function(error) {
-            console.log('Error fetching stops:', error);
-          });
-        
-      });
-
+      const dropdownMenu = $('div#dropdownMenu_stops');
+      dropdownMenu.empty();
+      appendDropdownHeader(dropdownMenu, 'Stops', stopsList.length);
+      appendDropdownItems(dropdownMenu, stopsList);
+    
+      // Store the stops in the button
+      $('#search').data('stops', stops);
     })
+
     .catch(function(error) {
-      console.log('Error fetching routes:', error);
+      console.log('Error fetching stops:', error);
     });
-}
+  
+
+
+
+  
+  $.get(`http://127.0.0.1:5001/api/v1/schedules/${route.schedule_id}`)
+  .then(function(schedule) {
+    const stops = $('#search').data('stops');
+    const stopName = $('#search').data('stopName');
+
+    console.log('stops length:', stops.length);
+    estimated_time_between_stops = calculate_ETBS(schedule.duration, stops.length);
+    console.log('Estimated time between stops:', estimated_time_between_stops);
+    let estimated_arrival_time_list = bus_EAT(schedule.first_departure, schedule.last_departure, schedule.bus_frequency, estimated_time_between_stops, 1);
+    console.log('Estimated arrival time list:', estimated_arrival_time_list);
+
+    
+    
+    const tableBody_1 = $('tbody#info_1');
+    tableBody_1.empty();
+    appendTableBody_1(tableBody_1, route, schedule);
+
+    const tableBody_2 = $('tbody#info_2');
+    tableBody_2.empty();
+    appendTableBody_2(tableBody_2, route, schedule);
+    
+    
+    const list_group = $('div#estimatedArrivalTimes');
+    list_group.empty();
+    list_header = `Estimated arrival times for ${stopName}`;
+    appendList(list_group, list_header, estimated_arrival_time_list.map(estimated_arrival_time => estimated_arrival_time.toLocaleTimeString()));
+  })
+  
+  .catch(function(error) {
+    console.log('Error fetching stops:', error);
+  });
+
+
+}*/
 
 /**
  * Categorizes the given routes into urban and suburban lines.
@@ -135,7 +271,10 @@ function categorizeRoutes(routes) {
  * @param {string} category - The category of the header.
  * @param {number} count - The number of lines in the category.
  */
-function appendDropdownHeader(dropdownMenu, category, count) {
+function appendDropdownHeader(dropdownMenu, category, count, dropdownMenu_divider = false) {
+  if (dropdownMenu_divider) {
+    dropdownMenu.append('<div class="dropdown-divider"></div>');
+  }
   dropdownMenu.append(`<h6 class="dropdown-header">${category} ${count} line(s)</h6>`);
 }
 
@@ -261,30 +400,51 @@ function calculate_ETBS(duration, stops) {
   
   let duration_in_minutes = new Date(`1970-01-01T${duration}`);
   duration_in_minutes = duration_in_minutes.getMinutes() + duration_in_minutes.getHours() * 60;
-  return duration_in_minutes / stops;
+  /*
+  Why stops - 1?
+  The bus stops at the first stop and the last stop, so the average duration per stop is the total
+  duration divided by the number of stops minus 1.
+  Example:
+  If the total duration is 60 minutes and there are 5 stops, the average duration per stop is:
+  60 / (5 - 1) = 60 / 4 = 15 minutes.
+  S5 - S4 - S3 - S2 - S1      S for stop
+  60 - 45 - 30 - 15 - 00      time in minutes 
+  */
+  return duration_in_minutes / (stops - 1);
   
 }
 
   
+function appendTableBody_1(tableBody, route, schedule) {
   
-  
-  function appendTableBody(tableBody, route, schedule) {
-    
-    // Create row for table body
-    let row = $('<tr></tr>');
-    // Set the innerHTML of the row
-    row.html(`
-      <td scope="row">${route.departure_terminus}</td>
-      <td>${schedule.duration}</td>
-      <td>${route.arrival_terminus}</td>
-      <td>${schedule.bus_frequency}</td>
-    `);
+  // Create row for table body
+  let row = $('<tr></tr>');
+  // Set the innerHTML of the row
+  row.html(`
+    <td scope="row">${route.departure_terminus}</td>
+    <td scope="row">${schedule.duration}</td>
+    <td scope="row">${route.arrival_terminus}</td>
+    <td scope="row">${schedule.bus_frequency}</td>
+  `);
 
-    // Append the row to the appropriate tbody
-    tableBody.append(row);
+  // Append the row to the appropriate tbody
+  tableBody.append(row);
 
-  }
+}
+
+function appendTableBody_2(tableBody, route, schedule) {
   
-  
-  
+  // Create row for table body
+  let row = $('<tr></tr>');
+  // Set the innerHTML of the row
+  row.html(`
+    <td scope="row">Line ${route.line_number}</td>
+    <td scope="row">${schedule.first_departure}</td>
+    <td scope="row">${schedule.last_departure}</td>
+  `);
+
+  // Append the row to the appropriate tbody
+  tableBody.append(row);
+
+}
   

@@ -14,10 +14,10 @@ $(document).ready(function() {
         let row = $('<tr></tr>');
         // Set the innerHTML of the row
         row.html(`
-          <th scope="row">${route.line_number}</th>
+          <th scope="row">${route.line_number.toString().padStart(2, '0')}</th>
           <td>${route.departure_terminus}</td>
           <td>${route.arrival_terminus}</td>
-          <td>${route.price}</td>
+          <td>${route.price} DH</td>
         `);
       
         // Append the row to the appropriate tbody
@@ -50,6 +50,23 @@ $(document).ready(function() {
     } else {
       console.log(status);
     }
+  });
+
+
+
+  // Show or hide the scroll-to-top button based on scroll position
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 100) {
+        $('.scroll-to-top').fadeIn();
+    } else {
+        $('.scroll-to-top').fadeOut();
+    }
+  });
+
+  // Scroll to top when the button is clicked
+  $('.scroll-to-top a').click(function () {
+      $('html, body').animate({ scrollTop: 0 }, 800);
+      return false;
   });
 });
 
