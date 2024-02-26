@@ -46,6 +46,10 @@ def get_fares_by_bus_lines():
 def home():
     return render_template('busEAT.html')
 
+@app.route('/', strict_slashes=False)
+def about():
+    return render_template('about.html')
+
 
 if __name__ == "__main__":
     # Run the Flask web server
